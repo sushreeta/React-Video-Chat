@@ -48,6 +48,11 @@ io.sockets.on("connection", function(socket) {
     }
   });
 
+  socket.on("event", e => {
+    // socket.broadcast
+    socket.broadcast.to(e.room).emit("event", e.name + ": " + e.message);
+  });
+
   socket.on("bye", function() {
     console.log("received bye");
   });

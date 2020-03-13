@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Socket.IO chat</title>
-   <style>
+    <!-- <style>
        {
         margin: 0;
         padding: 0;
@@ -41,10 +41,10 @@
       #messages li:nth-child(odd) {
         background: #eee;
       }
-    </style> 
+    </style>  -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-        <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script> -->
+    <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script> -->
     <!-- <script>
       // $(function() {
       //   var socket = io();
@@ -72,6 +72,10 @@
 
       <video id="remoteVideo" autoplay playsinline></video>
     </div>
+    <input type="text" id="message" />
+    <button id="send">Send</button>
+    <br />
+    <ul id="list"></ul>
     <!-- <video id="video" autoplay></video> -->
     <!-- <ul id="messages"></ul>
     <form action="">
@@ -146,6 +150,20 @@
         }
       });
 
+      document.getElementById("send").addEventListener("click", e => {
+        socket.emit("event", {
+          room: room,
+          message: document.getElementById("message").value,
+          name: "client1"
+        });
+      });
+      const addLi = message => {
+        const li = document.createElement("li");
+        li.appendChild(document.createTextNode(message));
+        document.getElementById("list").appendChild(li);
+      };
+      socket.on('event', addLi)
+
       const localVideo = document.querySelector("#localVideo");
       const remoteVideo = document.querySelector("#remoteVideo");
 
@@ -160,11 +178,11 @@
       };
       navigator.mediaDevices
         .getUserMedia({
-          audio: false,
+          audio: true,
           video: true
         })
         .then(gotStream)
-        .catch((e) =>{
+        .catch(e => {
           alert("error: " + e.name);
         });
 
@@ -281,6 +299,5 @@
         pc = null;
       };
     </script>
-
   </body>
 </html>
