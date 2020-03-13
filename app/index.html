@@ -2,8 +2,8 @@
 <html>
   <head>
     <title>Socket.IO chat</title>
-    <!-- <style>
-      * {
+   <style>
+       {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
@@ -41,7 +41,7 @@
       #messages li:nth-child(odd) {
         background: #eee;
       }
-    </style> -->
+    </style> 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
         <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script> -->
@@ -164,7 +164,7 @@
           video: true
         })
         .then(gotStream)
-        .catch(function(e) {
+        .catch((e) =>{
           alert("error: " + e.name);
         });
 

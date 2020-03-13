@@ -7,41 +7,20 @@ app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 
-const server = app.listen(port)
-// require("http").createServer(app);
+const server = app.listen(port);
+
 const io = require("socket.io")(server);
 
-// io.on("connection", socket => {
-//   console.log("socket connection established");
-//   socket.on("chat message", msg => {
-//     io.emit("chat message", msg);
-//     console.log(msg);
-//   });
-// });
-// io.on("connection", socket => {
-//   console.log("socket connection established");
-//   socket.on("socketPing", ()=>{
-//     console.log("received socketPing, sending socketPong")
-//     io.emit('socketpong')
-//   })
-// })
-
-// server.listen(port, function() {
-//   console.log("listening to port", port);
-//   // console.log(io)
-// });
-
-io.sockets.on("connection", function(socket) {
-  // convenience function to log server messages on the client
-  function log() {
+io.sockets.on("connection", socket => {
+  const log = () => {
     var array = ["Message from server:"];
     array.push.apply(array, arguments);
     socket.emit("log", array);
-  }
+  };
 
   socket.on("message", function(message) {
     log("Client said: ", message);
-    // for a real app, would be room-only (not broadcast)
+
     socket.broadcast.emit("message", message);
   });
 
@@ -66,7 +45,6 @@ io.sockets.on("connection", function(socket) {
       socket.emit("joined", room, socket.id);
       io.sockets.in(room).emit("ready");
     } else {
-      // max two clients
       socket.emit("full", room);
     }
   });
@@ -75,4 +53,3 @@ io.sockets.on("connection", function(socket) {
     console.log("received bye");
   });
 });
-
