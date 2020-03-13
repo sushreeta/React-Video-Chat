@@ -8,15 +8,14 @@ app.get("/", function(req, res) {
 });
 
 const server = app.listen(port);
-
 const io = require("socket.io")(server);
 
-io.sockets.on("connection", socket => {
-  const log = () => {
-    var array = ["Message from server:"];
+io.sockets.on("connection", function(socket) {
+  function log() {
+    const array = ["Message from server:"];
     array.push.apply(array, arguments);
     socket.emit("log", array);
-  };
+  }
 
   socket.on("message", function(message) {
     log("Client said: ", message);
@@ -27,9 +26,9 @@ io.sockets.on("connection", socket => {
   socket.on("create or join", function(room) {
     log("Received request to create or join room " + room);
 
-    var clientsInRoom = io.sockets.adapter.rooms[room];
+    const clientsInRoom = io.sockets.adapter.rooms[room];
     console.log("number of clients in room", clientsInRoom);
-    var numClients = clientsInRoom
+    const numClients = clientsInRoom
       ? Object.keys(clientsInRoom.sockets).length
       : 0;
     log("Room " + room + " now has " + numClients + " client(s)");
