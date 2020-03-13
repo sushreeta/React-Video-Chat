@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
-    <!-- <style>
+    <title>VideoChatApp</title>
+    <style>
        {
         margin: 0;
         padding: 0;
@@ -11,60 +11,38 @@
       body {
         font: 13px Helvetica, Arial;
       }
-      form {
-        background: #000;
+      #localVideo {
+        height: 50%;
+        width: 50%;
+      }
+      #remoteVideo {
+        height: 25%;
+        width: 25%;
+      }
+      #input {
         padding: 3px;
         position: fixed;
         bottom: 0;
         width: 100%;
       }
-      form input {
-        border: 0;
+      #message {
+        border: 1;
         padding: 10px;
-        width: 90%;
-        margin-right: 0.5%;
+        width: 80%;
       }
-      form button {
-        width: 9%;
+      #send {
+        width: 10%;
         background: rgb(130, 224, 255);
         border: none;
         padding: 10px;
       }
-      #messages {
+      #list {
         list-style-type: none;
-        margin: 0;
-        padding: 0;
-      }
-      #messages li {
         padding: 5px 10px;
       }
-      #messages li:nth-child(odd) {
-        background: #eee;
-      }
-    </style>  -->
+    </style> 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-    <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script> -->
-    <!-- <script>
-      // $(function() {
-      //   var socket = io();
-      //   $("form").submit(function(e) {
-      //     e.preventDefault(); // prevents page reloading
-      //     socket.emit("chat message", $("#m").val());
-      //     $("#m").val("");
-      //     return false;
-      //   });
-      //   socket.on("chat message", function(msg) {
-      //     $("#messages").append($("<li>").text(msg));
-      //   });
-      // });
-      var socket = io()
-      // socket.emit('socketPing');
-      socket.on("socketPong", ()=>{
-        console.log('SocketPong')
-        setTimeout(()=>{ socket.emit('socketPing'), 2000})
-      });
-    </script> -->
   </head>
   <body>
     <div id="videos">
@@ -72,15 +50,13 @@
 
       <video id="remoteVideo" autoplay playsinline></video>
     </div>
-    <input type="text" id="message" />
-    <button id="send">Send</button>
-    <br />
     <ul id="list"></ul>
-    <!-- <video id="video" autoplay></video> -->
-    <!-- <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form> -->
+    <div id="input">
+      <input type="text" id="message" /><button id="send">Send</button>
+    </div>
+    
+    <br />
+
     <script>
       let isChannelReady = false;
       let isInitiator = false;
@@ -150,7 +126,7 @@
         }
       });
 
-      document.getElementById("send").addEventListener("click", e => {
+      document.getElementById("send").addEventListener("click", () => {
         socket.emit("event", {
           room: room,
           message: document.getElementById("message").value,
