@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Socket.IO chat</title>
-    <!-- <style>
+    <style>
        {
         margin: 0;
         padding: 0;
@@ -41,7 +41,7 @@
       #messages li:nth-child(odd) {
         background: #eee;
       }
-    </style>  -->
+    </style> 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script> -->
@@ -65,6 +65,7 @@
         setTimeout(()=>{ socket.emit('socketPing'), 2000})
       });
     </script> -->
+
   </head>
   <body>
     <div id="videos">
@@ -81,6 +82,7 @@
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form> -->
+
     <script>
       let isChannelReady = false;
       let isInitiator = false;
@@ -176,6 +178,7 @@
           start();
         }
       };
+			console.log('the user media',navigator.mediaDevices)
       navigator.mediaDevices
         .getUserMedia({
           audio: true,
@@ -199,7 +202,7 @@
           isChannelReady
         ) {
           createPeerConnection();
-          pc.addStream(localStream);
+          pc.ontrack(localStream);
           isStarted = true;
           console.log("isInitiator", isInitiator);
           if (isInitiator) {
@@ -216,7 +219,7 @@
         try {
           pc = new RTCPeerConnection(null);
           pc.onicecandidate = handleIceCandidate;
-          pc.onaddstream = handleRemoteStreamAdded;
+          pc.ontrack = handleRemoteStreamAdded;
           pc.onremovestream = handleRemoteStreamRemoved;
           console.log("Created RTCPeerConnnection");
         } catch (e) {

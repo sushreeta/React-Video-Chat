@@ -10,20 +10,20 @@ app.get("/", function(req, res) {
 const server = app.listen(port);
 const io = require("socket.io")(server);
 
-io.sockets.on("connection", function(socket) {
-  function log() {
+io.sockets.on("connection", socket => {
+  const log = msg => {
     const array = ["Message from server:"];
-    array.push.apply(array, arguments);
+    array.push(...array, msg);
     socket.emit("log", array);
-  }
+  };
 
-  socket.on("message", function(message) {
+  socket.on("message", message => {
     log("Client said: ", message);
 
     socket.broadcast.emit("message", message);
   });
 
-  socket.on("create or join", function(room) {
+  socket.on("create or join", room => {
     log("Received request to create or join room " + room);
 
     const clientsInRoom = io.sockets.adapter.rooms[room];
@@ -53,7 +53,7 @@ io.sockets.on("connection", function(socket) {
     socket.broadcast.to(e.room).emit("event", e.name + ": " + e.message);
   });
 
-  socket.on("bye", function() {
+  socket.on("bye", () => {
     console.log("received bye");
   });
 });
