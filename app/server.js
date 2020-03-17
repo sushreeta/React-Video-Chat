@@ -10,14 +10,14 @@ app.get("/", function(req, res) {
 const server = app.listen(port);
 const io = require("socket.io")(server);
 
-io.sockets.on("connection", function(socket) {
+io.sockets.on("connection", socket => {
   function log() {
     const array = ["Message from server:"];
     array.push.apply(array, arguments);
     socket.emit("log", array);
   }
 
-  socket.on("message", function(message) {
+  socket.on("message", message => {
     log("Client said: ", message);
 
     socket.broadcast.emit("message", message);
@@ -50,7 +50,7 @@ io.sockets.on("connection", function(socket) {
 
   socket.on("event", e => {
     // socket.broadcast
-    socket.broadcast.to(e.room).emit("event", e.name + ": " + e.message);
+    io.to(e.room).emit("event", e.message, e.name);
   });
 
   socket.on("bye", function() {

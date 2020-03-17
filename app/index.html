@@ -40,21 +40,20 @@
         list-style-type: none;
         padding: 5px 10px;
       }
-    </style> 
+    </style>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
   </head>
   <body>
     <div id="videos">
       <video id="localVideo" autoplay muted playsinline></video>
-
       <video id="remoteVideo" autoplay playsinline></video>
     </div>
     <ul id="list"></ul>
     <div id="input">
       <input type="text" id="message" /><button id="send">Send</button>
     </div>
-    
+
     <br />
 
     <script>
@@ -68,11 +67,14 @@
 
       let clientId;
       let recieverId;
-      const room = "Room1";
+      // const room = "Room1";
+      const room = prompt("Please enter room name")
+      const clientName = prompt("Please enter your name")
 
       const socket = io.connect();
 
       if (room !== "") {
+        
         socket.emit("create or join", room);
       }
 
@@ -89,7 +91,7 @@
         isChannelReady = true;
       });
 
-      socket.on("joined", room => {
+      socket.on("joined", (room, socketId )=> {
         console.log("joined" + room);
         isChannelReady = true;
       });
@@ -130,7 +132,7 @@
         socket.emit("event", {
           room: room,
           message: document.getElementById("message").value,
-          name: "client1"
+          name: clientName
         });
       });
       const addLi = message => {
@@ -138,13 +140,13 @@
         li.appendChild(document.createTextNode(message));
         document.getElementById("list").appendChild(li);
       };
-      socket.on('event', addLi)
+      socket.on("event", addLi);
 
       const localVideo = document.querySelector("#localVideo");
       const remoteVideo = document.querySelector("#remoteVideo");
 
       const gotStream = stream => {
-        console.log("Adding local stream.");
+        console.log("Adding local stream.", stream);
         localStream = stream;
         localVideo.srcObject = stream;
         sendMessage("got user media");
