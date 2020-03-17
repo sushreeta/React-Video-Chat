@@ -11,11 +11,7 @@ const server = app.listen(port);
 const io = require("socket.io")(server);
 
 io.sockets.on("connection", socket => {
-<<<<<<< HEAD
-  function log() {
-=======
   const log = msg => {
->>>>>>> 012e073376e35179d1e1fbfedc3c37169c227276
     const array = ["Message from server:"];
     array.push(...array, msg);
     socket.emit("log", array);
