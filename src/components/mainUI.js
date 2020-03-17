@@ -1,9 +1,8 @@
 import React, { useRef } from "react";
 // import io from "socket.io-client";
 import socket from './socket/socket'
-import {addLi, MessageList} from './textMessage/MessageList';
+import MessageList from './textMessage/MessageList';
 import MessageInput from './textMessage/MessageInput';
-import userInfo from './UserInfo/info'
 import "./ui.css";
 // import "https://webrtc.github.io/adapter/adapter-latest.js";
 
@@ -55,9 +54,6 @@ const MainUi = () => {
     clientData.room = room;
     clientData.id = socketId;
     clientData.name=clientName
-    userInfo.room = clientData.room
-    userInfo.name = clientData.name
-    userInfo.socketId = clientData.id
     isChannelReady = true;
   });
 
@@ -93,18 +89,19 @@ const MainUi = () => {
     }
   });
 
-  // const send = (e) => {
-  //   console.log("onclick send: ",e)
-  //   socket.emit("event", {
-  //     room: room,
-  //     message: e.target.value,
-  //     name: clientName
-  //   });
-  // };
-  // const addLi = (msg, name) => {
-  //   message.push({ name, message: msg });
-  // };
-  socket.on("event", (msg, name) => {addLi(msg, name)});
+  const handleSendText = (props) => {
+    console.log("props textmsg",props)
+    socket.emit("event", {
+      room: props.room,
+      message: props.textMessage,
+      name: props.name,
+    });
+  }
+  const textMessage = {message: "",
+                      name:""}
+  socket.on("event", (message, name) => {textMessage.name= name
+     textMessage.message=message});
+  console.log("TextMessage",textMessage )
 
   const remoteVideo = useRef(null);
   const localVideo = useRef(null);
@@ -239,22 +236,9 @@ const MainUi = () => {
         <video id="localVideo" ref={localVideo} autoPlay />
         <video id="remoteVideo" ref={remoteVideo} autoPlay />
       </div>
-      {/* <ul id="list">
-        {message.map(item => (
-          <li key={item.message}>
-            {item.name}":"{item.message}
-            {console.log("item", item)}
-          </li>
-        ))}
-      </ul> */}
-      <MessageList/>
-      {/* <div id="input">
-        <input type="text" id="message" />
-        <button id="send" onClick={(e) => send(e)}>
-          Send
-        </button>
-      </div> */}
-      <MessageInput/>
+      
+      <MessageInput room={room} name={clientName} handleSend={handleSendText}/>
+      <MessageList room={room} name={clientName} textMessage={textMessage}/>
     </div>
   );
 };

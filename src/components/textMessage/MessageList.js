@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles'
 
-let message = [];
-const addLi = (msg, name) => {
-    message.push({ name, message: msg });
-  };
-  
+// let [message, handleMessage] = useState([]);
+// const addLi = (msg, name) => {
+//     // message.push({ name: name, message: msg });
+//     handleMessage([...message, {name, message: msg}])
+//     console.log("pushed msg ", name, msg, message)
+//   };
   
 const useStyles = makeStyles(theme => ({
     list: {
@@ -13,10 +14,12 @@ const useStyles = makeStyles(theme => ({
     padding: '10px',
    }}));
 
-const MessageList = ()=>{
+const MessageList = (props)=>{
 
     const classes = useStyles();
-
+    let [message, handleMessage] = useState([]);
+    handleMessage([...message, {name: props.textMessage.name, message: props.textMessage.message}])
+    console.log("pushed msg ", props)
     return (
         <ul id="list" className={classes.list}>
         {message.map(item => (
@@ -28,4 +31,4 @@ const MessageList = ()=>{
       </ul>
     )
 }
-export {addLi, MessageList};
+export default MessageList;

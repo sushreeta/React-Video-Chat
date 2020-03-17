@@ -1,11 +1,8 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles'
-import { TextField } from '@material-ui/core';
+import { TextField, Button, Box } from '@material-ui/core';
 import * as Yup from 'yup';
-import socket from '../socket/socket'
-import userInfo from '../UserInfo/info'
 
 
 const useStyles = makeStyles(theme => ({
@@ -23,9 +20,9 @@ const useStyles = makeStyles(theme => ({
 
 
 
-const MessageInput = () => {
+const MessageInput = (props) => {
 
-  const classes = useStyles();
+  const classes = useStyles(); //will use it in future for formatting
 
   const formik = useFormik({
     initialValues: {
@@ -35,32 +32,30 @@ const MessageInput = () => {
         textMessage: Yup.string()
           .required('Required')}),
     onSubmit: values => {
-        console.log("onclick send: ",values)
-        socket.emit("event", {
-          room: userInfo.room,
-          message: values,
-          name: userInfo.name,
+        console.log("onclick send: ",values.textMessage, props)
+        props.handleSend({
+          room: props.room,
+          textMessage: values.textMessage,
+          name: props.name,
         });
+        values.textMessage=""
+        
     },
   });
   return (
     <form onSubmit={formik.handleSubmit}>
-        <Box className={classes.message}>
       <TextField
         id="textMessage"
         name="textMessage"
         type="text"
         {...formik.getFieldProps('textMessage')}/>
-      />
+    
       {formik.touched.textMessage && formik.errors.textMessage ? (
         <div>{formik.errors.textMessage}</div>
       ) : null}
 
 
-        <Box className={classes.send}>
-          <button type="submit" action="Submit" variant ="contained" label="Send"/>  
-        </Box>
-        </Box>
+        <Button type="submit" variant="contained" color="primary">Send</Button>  
     </form>
   )
 }

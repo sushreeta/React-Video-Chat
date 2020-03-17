@@ -53,6 +53,7 @@ io.sockets.on("connection", socket => {
 
   socket.on("event", e => {
     // socket.broadcast
+    console.log("Server received msg: ", e)
     io.to(e.room).emit("event", e.message, e.name);
   });
 
