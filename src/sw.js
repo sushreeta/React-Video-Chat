@@ -1,4 +1,4 @@
-console.log("In sw.js");
+// console.log("In sw.js");
 
 workbox.core.skipWaiting();
 workbox.core.clientsClaim();
@@ -53,7 +53,7 @@ self.addEventListener("fetch", event => {
 
 self.addEventListener("push", event => {
   event.waitUntil(
-    self.registration.showNotification("Todo List", {
+    self.registration.showNotification("Video Chat App", {
       icon: "/icon-120.png",
       body: event.data.text()
     })
