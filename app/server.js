@@ -11,11 +11,15 @@ const server = app.listen(port);
 const io = require("socket.io")(server);
 
 io.sockets.on("connection", socket => {
+<<<<<<< HEAD
   function log() {
+=======
+  const log = msg => {
+>>>>>>> 012e073376e35179d1e1fbfedc3c37169c227276
     const array = ["Message from server:"];
-    array.push.apply(array, arguments);
+    array.push(...array, msg);
     socket.emit("log", array);
-  }
+  };
 
   socket.on("message", message => {
     log("Client said: ", message);
@@ -23,7 +27,7 @@ io.sockets.on("connection", socket => {
     socket.broadcast.emit("message", message);
   });
 
-  socket.on("create or join", function(room) {
+  socket.on("create or join", room => {
     log("Received request to create or join room " + room);
 
     const clientsInRoom = io.sockets.adapter.rooms[room];
@@ -53,7 +57,7 @@ io.sockets.on("connection", socket => {
     io.to(e.room).emit("event", e.message, e.name);
   });
 
-  socket.on("bye", function() {
+  socket.on("bye", () => {
     console.log("received bye");
   });
 });

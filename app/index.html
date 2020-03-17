@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
+<<<<<<< HEAD
     <title>VideoChatApp</title>
+=======
+    <title>Socket.IO chat</title>
+>>>>>>> 012e073376e35179d1e1fbfedc3c37169c227276
     <style>
        {
         margin: 0;
@@ -40,9 +44,40 @@
         list-style-type: none;
         padding: 5px 10px;
       }
+<<<<<<< HEAD
     </style>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+=======
+      #messages li:nth-child(odd) {
+        background: #eee;
+      }
+    </style> 
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script> -->
+    <!-- <script>
+      // $(function() {
+      //   var socket = io();
+      //   $("form").submit(function(e) {
+      //     e.preventDefault(); // prevents page reloading
+      //     socket.emit("chat message", $("#m").val());
+      //     $("#m").val("");
+      //     return false;
+      //   });
+      //   socket.on("chat message", function(msg) {
+      //     $("#messages").append($("<li>").text(msg));
+      //   });
+      // });
+      var socket = io()
+      // socket.emit('socketPing');
+      socket.on("socketPong", ()=>{
+        console.log('SocketPong')
+        setTimeout(()=>{ socket.emit('socketPing'), 2000})
+      });
+    </script> -->
+
+>>>>>>> 012e073376e35179d1e1fbfedc3c37169c227276
   </head>
   <body>
     <div id="videos">
@@ -50,11 +85,19 @@
       <video id="remoteVideo" autoplay playsinline></video>
     </div>
     <ul id="list"></ul>
+<<<<<<< HEAD
     <div id="input">
       <input type="text" id="message" /><button id="send">Send</button>
     </div>
 
     <br />
+=======
+    <!-- <video id="video" autoplay></video> -->
+    <!-- <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form> -->
+>>>>>>> 012e073376e35179d1e1fbfedc3c37169c227276
 
     <script>
       let isChannelReady = false;
@@ -154,6 +197,7 @@
           start();
         }
       };
+			console.log('the user media',navigator.mediaDevices)
       navigator.mediaDevices
         .getUserMedia({
           audio: true,
@@ -177,7 +221,7 @@
           isChannelReady
         ) {
           createPeerConnection();
-          pc.addStream(localStream);
+          pc.ontrack(localStream);
           isStarted = true;
           console.log("isInitiator", isInitiator);
           if (isInitiator) {
@@ -194,7 +238,7 @@
         try {
           pc = new RTCPeerConnection(null);
           pc.onicecandidate = handleIceCandidate;
-          pc.onaddstream = handleRemoteStreamAdded;
+          pc.ontrack = handleRemoteStreamAdded;
           pc.onremovestream = handleRemoteStreamRemoved;
           console.log("Created RTCPeerConnnection");
         } catch (e) {
