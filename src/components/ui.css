@@ -20,17 +20,6 @@ body {
   bottom: 0;
   width: 100%;
 }
-#message {
-  border: 1;
-  padding: 10px;
-  width: 80%;
-}
-#send {
-  width: 10%;
-  background: rgb(130, 224, 255);
-  border: none;
-  padding: 10px;
-}
 #list {
   list-style-type: none;
   padding: 5px 10px;

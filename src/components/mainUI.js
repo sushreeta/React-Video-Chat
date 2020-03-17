@@ -1,7 +1,9 @@
 import React, { useRef } from "react";
-
-import io from "socket.io-client";
-// const socket = io('http://localhost:8006');
+// import io from "socket.io-client";
+import socket from './socket/socket'
+import {addLi, MessageList} from './textMessage/MessageList';
+import MessageInput from './textMessage/MessageInput';
+import userInfo from './UserInfo/info'
 import "./ui.css";
 // import "https://webrtc.github.io/adapter/adapter-latest.js";
 
@@ -22,17 +24,19 @@ const MainUi = () => {
     name: "",
     id: ""
   };
-  // const room = "Room1";
+ 
   const room = prompt("Please enter room name");
   const clientName = prompt("Please enter your name");
 
-  const socket = io.connect("http://localhost:8006");
+
+  // const socket = io.connect("http://localhost:8006");
 
   if (room !== "") {
     socket.emit("create or join", room);
   }
 
   socket.on("created", () => {
+    console.log("created...")
     console.log("isInitiator, created");
     isInitiator = true;
   });
@@ -50,11 +54,15 @@ const MainUi = () => {
     console.log("joined" + room);
     clientData.room = room;
     clientData.id = socketId;
+    clientData.name=clientName
+    userInfo.room = clientData.room
+    userInfo.name = clientData.name
+    userInfo.socketId = clientData.id
     isChannelReady = true;
   });
 
   socket.on("log", array => {
-    console.log.apply(console, array);
+    // console.log.apply(console, array);
   });
 
   const sendMessage = message => {
@@ -85,20 +93,18 @@ const MainUi = () => {
     }
   });
 
-  const send = () => {
-    socket.emit("event", {
-      room: room,
-      message: "zzz",
-      name: clientName
-    });
-  };
-  const addLi = (msg, name) => {
-    message.push({ name, message: msg });
-    //   const li = document.createElement("li");
-    //   li.appendChild(document.createTextNode(message));
-    //   document.getElementById("list").appendChild(li);
-  };
-  socket.on("event", addLi);
+  // const send = (e) => {
+  //   console.log("onclick send: ",e)
+  //   socket.emit("event", {
+  //     room: room,
+  //     message: e.target.value,
+  //     name: clientName
+  //   });
+  // };
+  // const addLi = (msg, name) => {
+  //   message.push({ name, message: msg });
+  // };
+  socket.on("event", (msg, name) => {addLi(msg, name)});
 
   const remoteVideo = useRef(null);
   const localVideo = useRef(null);
@@ -233,20 +239,22 @@ const MainUi = () => {
         <video id="localVideo" ref={localVideo} autoPlay />
         <video id="remoteVideo" ref={remoteVideo} autoPlay />
       </div>
-      <ul id="list">
+      {/* <ul id="list">
         {message.map(item => (
           <li key={item.message}>
             {item.name}":"{item.message}
             {console.log("item", item)}
           </li>
         ))}
-      </ul>
-      <div id="input">
+      </ul> */}
+      <MessageList/>
+      {/* <div id="input">
         <input type="text" id="message" />
-        <button id="send" onClick={() => send()}>
+        <button id="send" onClick={(e) => send(e)}>
           Send
         </button>
-      </div>
+      </div> */}
+      <MessageInput/>
     </div>
   );
 };

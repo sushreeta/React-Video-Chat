@@ -1,13 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-<<<<<<< HEAD
     <title>VideoChatApp</title>
-=======
-    <title>Socket.IO chat</title>
->>>>>>> 012e073376e35179d1e1fbfedc3c37169c227276
     <style>
-       {
+       root {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
@@ -44,40 +40,9 @@
         list-style-type: none;
         padding: 5px 10px;
       }
-<<<<<<< HEAD
     </style>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-=======
-      #messages li:nth-child(odd) {
-        background: #eee;
-      }
-    </style> 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-    <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script> -->
-    <!-- <script>
-      // $(function() {
-      //   var socket = io();
-      //   $("form").submit(function(e) {
-      //     e.preventDefault(); // prevents page reloading
-      //     socket.emit("chat message", $("#m").val());
-      //     $("#m").val("");
-      //     return false;
-      //   });
-      //   socket.on("chat message", function(msg) {
-      //     $("#messages").append($("<li>").text(msg));
-      //   });
-      // });
-      var socket = io()
-      // socket.emit('socketPing');
-      socket.on("socketPong", ()=>{
-        console.log('SocketPong')
-        setTimeout(()=>{ socket.emit('socketPing'), 2000})
-      });
-    </script> -->
-
->>>>>>> 012e073376e35179d1e1fbfedc3c37169c227276
   </head>
   <body>
     <div id="videos">
@@ -85,19 +50,11 @@
       <video id="remoteVideo" autoplay playsinline></video>
     </div>
     <ul id="list"></ul>
-<<<<<<< HEAD
     <div id="input">
       <input type="text" id="message" /><button id="send">Send</button>
     </div>
 
     <br />
-=======
-    <!-- <video id="video" autoplay></video> -->
-    <!-- <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form> -->
->>>>>>> 012e073376e35179d1e1fbfedc3c37169c227276
 
     <script>
       let isChannelReady = false;
@@ -110,14 +67,12 @@
 
       let clientId;
       let recieverId;
-      // const room = "Room1";
-      const room = prompt("Please enter room name")
-      const clientName = prompt("Please enter your name")
+      const room = prompt("Please enter room name");
+      const clientName = prompt("Please enter your name");
 
       const socket = io.connect();
 
       if (room !== "") {
-        
         socket.emit("create or join", room);
       }
 
@@ -134,7 +89,7 @@
         isChannelReady = true;
       });
 
-      socket.on("joined", (room, socketId )=> {
+      socket.on("joined", room => {
         console.log("joined" + room);
         isChannelReady = true;
       });
@@ -171,25 +126,11 @@
         }
       });
 
-      document.getElementById("send").addEventListener("click", () => {
-        socket.emit("event", {
-          room: room,
-          message: document.getElementById("message").value,
-          name: clientName
-        });
-      });
-      const addLi = message => {
-        const li = document.createElement("li");
-        li.appendChild(document.createTextNode(message));
-        document.getElementById("list").appendChild(li);
-      };
-      socket.on("event", addLi);
-
       const localVideo = document.querySelector("#localVideo");
       const remoteVideo = document.querySelector("#remoteVideo");
 
       const gotStream = stream => {
-        console.log("Adding local stream.", stream);
+        console.log("Adding local stream.");
         localStream = stream;
         localVideo.srcObject = stream;
         sendMessage("got user media");
@@ -197,14 +138,13 @@
           start();
         }
       };
-			console.log('the user media',navigator.mediaDevices)
       navigator.mediaDevices
         .getUserMedia({
-          audio: true,
+          audio: false,
           video: true
         })
         .then(gotStream)
-        .catch(e => {
+        .catch(function(e) {
           alert("error: " + e.name);
         });
 
@@ -221,7 +161,7 @@
           isChannelReady
         ) {
           createPeerConnection();
-          pc.ontrack(localStream);
+          pc.addStream(localStream);
           isStarted = true;
           console.log("isInitiator", isInitiator);
           if (isInitiator) {
@@ -238,7 +178,7 @@
         try {
           pc = new RTCPeerConnection(null);
           pc.onicecandidate = handleIceCandidate;
-          pc.ontrack = handleRemoteStreamAdded;
+          pc.onaddstream = handleRemoteStreamAdded;
           pc.onremovestream = handleRemoteStreamRemoved;
           console.log("Created RTCPeerConnnection");
         } catch (e) {
@@ -277,6 +217,20 @@
           onCreateSessionDescriptionError
         );
       };
+
+      document.getElementById("send").addEventListener("click", () => {
+        socket.emit("event", {
+          room: room,
+          message: document.getElementById("message").value,
+          name: clientName
+        });
+      });
+      const addLi = message => {
+        const li = document.createElement("li");
+        li.appendChild(document.createTextNode(message));
+        document.getElementById("list").appendChild(li);
+      };
+      socket.on("event", addLi);
 
       const setLocalAndSendMessage = sessionDescription => {
         pc.setLocalDescription(sessionDescription);
@@ -320,6 +274,227 @@
         pc.close();
         pc = null;
       };
+
+      // let isChannelReady = false;
+      // let isInitiator = false;
+      // let isStarted = false;
+      // let localStream;
+      // let pc;
+      // let remoteStream;
+      // let turnReady;
+
+      // let clientId;
+      // let recieverId;
+      // // const room = "Room1";
+      // const room = prompt("Please enter room name")
+      // const clientName = prompt("Please enter your name")
+
+      // const socket = io.connect();
+
+      // if (room !== "") {
+
+      //   socket.emit("create or join", room);
+      // }
+
+      // socket.on("created", () => {
+      //   isInitiator = true;
+      // });
+
+      // socket.on("full", room => {
+      //   console.log("Room " + room + " is full");
+      // });
+
+      // socket.on("join", room => {
+      //   console.log(" peer made a request to the room " + room);
+      //   isChannelReady = true;
+      // });
+
+      // socket.on("joined", (room, socketId )=> {
+      //   console.log("joined" + room);
+      //   isChannelReady = true;
+      // });
+
+      // socket.on("log", array => {
+      //   console.log.apply(console, array);
+      // });
+
+      // const sendMessage = message => {
+      //   console.log("Client sending message: ", message);
+      //   socket.emit("message", message);
+      // };
+
+      // socket.on("message", message => {
+      //   console.log("Client received message:", message);
+      //   if (message === "got user media") {
+      //     start();
+      //   } else if (message.type === "offer") {
+      //     if (!isInitiator && !isStarted) {
+      //       start();
+      //     }
+      //     pc.setRemoteDescription(new RTCSessionDescription(message));
+      //     doAnswer();
+      //   } else if (message.type === "answer" && isStarted) {
+      //     pc.setRemoteDescription(new RTCSessionDescription(message));
+      //   } else if (message.type === "candidate" && isStarted) {
+      //     const candidate = new RTCIceCandidate({
+      //       sdpMLineIndex: message.label,
+      //       candidate: message.candidate
+      //     });
+      //     pc.addIceCandidate(candidate);
+      //   } else if (message === "bye" && isStarted) {
+      //     handleRemoteHangup();
+      //   }
+      // });
+
+      // document.getElementById("send").addEventListener("click", () => {
+      //   socket.emit("event", {
+      //     room: room,
+      //     message: document.getElementById("message").value,
+      //     name: clientName
+      //   });
+      // });
+      // const addLi = message => {
+      //   const li = document.createElement("li");
+      //   li.appendChild(document.createTextNode(message));
+      //   document.getElementById("list").appendChild(li);
+      // };
+      // socket.on("event", addLi);
+
+      // const localVideo = document.querySelector("#localVideo");
+      // const remoteVideo = document.querySelector("#remoteVideo");
+
+      // const gotStream = stream => {
+      //   console.log("Adding local stream.", stream);
+      //   localStream = stream;
+      //   localVideo.srcObject = stream;
+      //   sendMessage("got user media");
+      //   if (isInitiator) {
+      //     start();
+      //   }
+      // };
+      // console.log('the user media',navigator.mediaDevices)
+      // navigator.mediaDevices
+      //   .getUserMedia({
+      //     audio: true,
+      //     video: true
+      //   })
+      //   .then(gotStream)
+      //   .catch(e => {
+      //     alert("error: " + e.name);
+      //   });
+
+      // const constraints = {
+      //   video: true
+      // };
+
+      // console.log("Getting user media with constraints", constraints);
+
+      // const start = () => {
+      //   if (
+      //     !isStarted &&
+      //     typeof localStream !== "undefined" &&
+      //     isChannelReady
+      //   ) {
+      //     createPeerConnection();
+      //     pc.ontrack(localStream);
+      //     isStarted = true;
+      //     console.log("isInitiator", isInitiator);
+      //     if (isInitiator) {
+      //       doCall();
+      //     }
+      //   }
+      // };
+
+      // window.onbeforeunload = () => {
+      //   sendMessage("bye");
+      // };
+
+      // const createPeerConnection = () => {
+      //   try {
+      //     pc = new RTCPeerConnection(null);
+      //     pc.onicecandidate = handleIceCandidate;
+      //     pc.ontrack = handleRemoteStreamAdded;
+      //     pc.onremovestream = handleRemoteStreamRemoved;
+      //     console.log("Created RTCPeerConnnection");
+      //   } catch (e) {
+      //     console.log("Failed to create PeerConnection " + e.message);
+      //     alert("Cannot create RTCPeerConnection.");
+      //     return;
+      //   }
+      // };
+
+      // const handleIceCandidate = event => {
+      //   if (event.candidate) {
+      //     sendMessage({
+      //       type: "candidate",
+      //       label: event.candidate.sdpMLineIndex,
+      //       id: event.candidate.sdpMid,
+      //       candidate: event.candidate.candidate
+      //     });
+      //   } else {
+      //     console.log("End of candidates.");
+      //   }
+      // };
+
+      // const handleCreateOfferError = event => {
+      //   console.log("createOffer() error: ", event);
+      // };
+
+      // const doCall = () => {
+      //   console.log("Sending offer to peer");
+      //   pc.createOffer(setLocalAndSendMessage, handleCreateOfferError);
+      // };
+
+      // const doAnswer = () => {
+      //   console.log("Sending answer to peer.");
+      //   pc.createAnswer().then(
+      //     setLocalAndSendMessage,
+      //     onCreateSessionDescriptionError
+      //   );
+      // };
+
+      // const setLocalAndSendMessage = sessionDescription => {
+      //   pc.setLocalDescription(sessionDescription);
+      //   console.log(
+      //     "setLocalAndSendMessage sending message",
+      //     sessionDescription
+      //   );
+      //   sendMessage(sessionDescription);
+      // };
+
+      // const onCreateSessionDescriptionError = error => {
+      //   console.log(
+      //     "Failed to create session description: " + error.toString()
+      //   );
+      // };
+
+      // const handleRemoteStreamAdded = event => {
+      //   console.log("Remote stream added.");
+      //   remoteStream = event.stream;
+      //   remoteVideo.srcObject = remoteStream;
+      // };
+
+      // const handleRemoteStreamRemoved = event => {
+      //   console.log("Remote stream removed. Event: ", event);
+      // };
+
+      // const hangup = () => {
+      //   console.log("Hanging up.");
+      //   stop();
+      //   sendMessage("bye");
+      // };
+
+      // const handleRemoteHangup = () => {
+      //   console.log("Session terminated.");
+      //   stop();
+      //   isInitiator = false;
+      // };
+
+      // const stop = () => {
+      //   isStarted = false;
+      //   pc.close();
+      //   pc = null;
+      // };
     </script>
   </body>
 </html>
