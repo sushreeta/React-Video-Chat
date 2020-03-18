@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import socket from '../socket/socket'
 
 // let [message, handleMessage] = useState([]);
 // const addLi = (msg, name) => {
@@ -23,31 +24,34 @@ function usePrevious(value) {
   return ref.current;
 }
 
-const MessageList = props => {
+const MessageList = () => {
   const classes = useStyles();
-  const [message, handleMessage] = useState([]);
-  let propMessage = props.textMessage.message;
-  const prevValue = !!usePrevious({ propMessage });
+  // const [message, setMessage] = useState([]);
+  const [message, setMessage] = useState([]);
+  // let propMessage = props.textMessage.message;
+  // const prevValue = !!usePrevious({ propMessage });
   
-  console.log("Previous value",prevValue)
+  // console.log("Previous value",prevValue)
+  socket.on("event", (text, name) => {setMessage([...message,{text, name}])});
+  console.log("TextMessage",message)
 
-  useEffect(() => {
+  // useEffect(() => {
     
-    console.log("Previous value",prevValue)
-    if (!!prevValue.message != !!props.textMessage.message) {
-      handleMessage([
-        ...message,
-        { name: props.textMessage.name, message: props.textMessage.message }
-      ]);
-      console.log("pushed msg ", props);
-    }
-  }, [props.textMessage.message]);
+  //   console.log("Previous value",prevValue)
+  //   if (!!prevValue.message != props.textMessage.message) {
+  //     setMessage([
+  //       ...message,
+  //       { name: props.textMessage.name, message: props.textMessage.message }
+  //     ]);
+  //     console.log("pushed msg ", props);
+  //   }
+  // }, [props.textMessage.message]);
 
   return (
     <ul id="list" className={classes.list}>
       {message.map(item => (
-        <li key={item.message}>
-          {item.name + ": " + item.message}
+        <li key={item.text}>
+          {item.name + ": " + item.text}
           {console.log("item", item)}
         </li>
       ))}

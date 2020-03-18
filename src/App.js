@@ -13,11 +13,14 @@ const createHistory = require("history").createBrowserHistory;
 const history = createHistory();
 
 function App() {
+   
+  const room = prompt("Please enter room name");
+  const clientName = prompt("Please enter your name");
   return (
     // <div className="App">
     <Router history={history}>
       <Link to="/"></Link>
-      <Route exact path="/" component={MainUi} />,
+      <Route exact path="/"> <MainUi room={room} name={clientName}/></Route>,
     </Router>
       
     // </div>

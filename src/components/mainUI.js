@@ -1,12 +1,12 @@
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 // import io from "socket.io-client";
 import socket from './socket/socket'
-import MessageList from './textMessage/MessageList';
-import MessageInput from './textMessage/MessageInput';
+import MessageList from './TextMessage/MessageList';
+import MessageInput from './TextMessage/MessageInput';
 import "./ui.css";
 // import "https://webrtc.github.io/adapter/adapter-latest.js";
 
-const MainUi = () => {
+const MainUi = (props) => {
   let isChannelReady = false;
   let isInitiator = false;
   let isStarted = false;
@@ -24,8 +24,8 @@ const MainUi = () => {
     id: ""
   };
  
-  const room = prompt("Please enter room name");
-  const clientName = prompt("Please enter your name");
+  const room = props.room
+  const clientName = props.name
 
 
   // const socket = io.connect("http://localhost:8006");
@@ -97,11 +97,10 @@ const MainUi = () => {
       name: props.name,
     });
   }
-  const textMessage = {message: "",
-                      name:""}
-  socket.on("event", (message, name) => {textMessage.name= name
-     textMessage.message=message});
-  console.log("TextMessage",textMessage )
+  // const [textMessage, setTextMessage] = useState({message: "",
+  //                     name:""})
+  // socket.on("event", (message, name) => {setTextMessage({message, name})});
+  // console.log("TextMessage",textMessage )
 
   const remoteVideo = useRef(null);
   const localVideo = useRef(null);
@@ -238,7 +237,8 @@ const MainUi = () => {
       </div>
       
       <MessageInput room={room} name={clientName} handleSend={handleSendText}/>
-      <MessageList room={room} name={clientName} textMessage={textMessage}/>
+      <MessageList />
+      {/* // room={room} name={clientName} textMessage={textMessage}/> */}
     </div>
   );
 };
