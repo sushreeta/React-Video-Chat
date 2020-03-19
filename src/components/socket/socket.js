@@ -1,3 +1,6 @@
 import io from "socket.io-client";
-const socket = io.connect("http://localhost:8006");
+import config from '../../config/config'
+
+const socket = io.connect(`http://localhost:${config.SERVER_PORT}`);
+
 export default socket;

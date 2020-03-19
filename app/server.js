@@ -1,17 +1,6 @@
-const express = require("express");
-const app = express();
-
-const port = 8006;
-
-const server = app.listen(port);
-const io = require("socket.io")(server);
-
-app.get("/", function(req, res) {
-  res.sendFile(__dirname + "/index.html");
-});
+const io = require('./socket/socket')
 
 io.sockets.on("connection", socket => {
-  console.log("connection...")
   const log = msg => {
     const array = ["Message from server:"];
     array.push(...array, msg);
@@ -19,8 +8,7 @@ io.sockets.on("connection", socket => {
   };
 
   socket.on("message", message => {
-    console.log("message...")
-    log("Client said: ", message);
+    // log("Client said: ", message);
     socket.broadcast.emit("message", message);
   });
 
@@ -53,11 +41,11 @@ io.sockets.on("connection", socket => {
 
   socket.on("event", e => {
     // socket.broadcast
-    console.log("Server received msg: ", e)
+    // console.log("Server received msg: ", e)
     io.to(e.room).emit("event", e.message, e.name);
   });
 
   socket.on("bye", () => {
-    console.log("received bye");
+    // console.log("received bye");
   });
 });

@@ -1,11 +1,6 @@
 import React from "react";
 import { CallEnd as CallEndIcon, Call as CallIcon } from "@material-ui/icons";
-import {
-  Typography,
-  Grid,
-  Avatar,
-  IconButton,
-} from "@material-ui/core";
+import { Typography, Grid, Avatar, IconButton } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
@@ -18,7 +13,7 @@ const useStyles = makeStyles({
   avtar: {
     marginLeft: "10px",
     marginRight: "10px"
-  },
+  }
 });
 
 const IncomingCall = () => {
